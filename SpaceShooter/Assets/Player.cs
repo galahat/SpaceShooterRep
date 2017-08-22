@@ -16,6 +16,10 @@ public class Player : MonoBehaviour {
     public GameObject bullet;
 
 
+    public float ShootingReloadTime = 0.3f;
+    float ShootingReloadTimer = 0;
+
+
 
     Vector2 MouseInWorld;
 
@@ -28,7 +32,11 @@ public class Player : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+
+        ShootingReloadTimer += Time.deltaTime;
+
+
+        if (Input.GetMouseButton(0))
         {
             Shoot();
         }
@@ -47,8 +55,13 @@ public class Player : MonoBehaviour {
 
     void Shoot()
     {
-       GameObject myBullet = Instantiate(bullet,transform.position,transform.rotation);
-        myBullet.GetComponent<Bullet>().FilterTag = gameObject.tag;
+        if (ShootingReloadTimer > ShootingReloadTime)
+        {
+            GameObject myBullet = Instantiate(bullet, transform.position, transform.rotation);
+            myBullet.GetComponent<Bullet>().FilterTag = gameObject.tag;
+            Destroy(myBullet,10);
+            ShootingReloadTimer = 0;
+        }
     }
 
     public void DamMe(float Dam)
